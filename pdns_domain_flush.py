@@ -99,10 +99,12 @@ def main():
         module.params['pdns_port'],
         module.params['pdns_api_key'],
         module.params['timeout'],)
+    # req_result[1] contains the api status_code
+    # req_result[0] contains api text result or api call exception error message
 
-    if req_result[1] in [200, 201, 204]:  # req_result[1] = status_code
-        req_to_json = json.loads(req_result[0])  # req_result[0] = text_result
-        if req_to_json['count'] > 0:
+    if req_result[1] in [200, 201, 204]:
+        req_to_json = json.loads(req_result[0])
+        if req_to_json['count'] > 0:  # 'count' contains records found and flushed
             module.exit_json(changed=True)
         else:
             module.exit_json(changed=False)
